@@ -41,4 +41,4 @@ async def nuke(ctx):
     else:
         await ctx.send("Tu n'as pas la permission d'utiliser cette commande.")
 
-bot.run(os.getenv("MTM2MzUxNDQ4MDg5MzQ5MzMzOA.G33hTp.DMHVCL_89TM5_lkaoPJCsCpuBeiwNKgTArSH98"))
+bot.run(os.getenv("TOKEN"))
